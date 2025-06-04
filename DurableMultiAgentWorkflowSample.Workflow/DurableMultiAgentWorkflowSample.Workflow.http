@@ -1,0 +1,30 @@
+﻿@DurableMultiAgentWorkflowSample.Workflow_HostAddress = http://localhost:57398
+@Id = 154c69bc394a49f891149e8c8e8e04d3
+
+POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Start
+Content-Type: application/json
+
+{
+  "Message": "ファンタジー短編小説の書き出し部分を書いてください。"
+}
+
+###
+GET {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/GetWorkflowStatus?instanceId={{Id}}
+
+###
+POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Reply
+Content-Type: application/json
+
+{
+  "Id": "{{Id}}",
+  "Message": "主人公が森で剣を振っているようなところまで書いてください"
+}
+
+###
+POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Reply
+Content-Type: application/json
+
+{
+  "Id": "{{Id}}",
+  "Message": "Approve"
+}

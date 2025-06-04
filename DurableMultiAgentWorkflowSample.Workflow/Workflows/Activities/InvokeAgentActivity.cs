@@ -3,8 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel;
+using System.ComponentModel.DataAnnotations;
 
-namespace DurableMultiAgentWorkflowSample.Workflow.Agents.Activities;
+namespace DurableMultiAgentWorkflowSample.Workflow.Workflows.Activities;
 
 public class InvokeAgentActivity(IServiceProvider services)
 {
@@ -19,19 +20,26 @@ public class InvokeAgentActivity(IServiceProvider services)
     /// be processed.</param>
     /// <returns>A <see cref="ChatMessageContent"/> object representing the result of the agent's processing.</returns>
     [Function(nameof(InvokeAgentActivity))]
-    public async Task<ChatMessageContent> InvokeAgentAsync(
-        [ActivityTrigger] (string agentName, ChatHistory messages) input)
+    public async Task<ChatMessageContent> RunAsync(
+        [ActivityTrigger] InvokeAgentRequest input)
     {
-        var (agentName, messages) = input;
+        var (agentName, message) = input;
         var agent = services.GetRequiredKeyedService<Agent>(agentName);
-        var thread = new ChatHistoryAgentThread(messages);
+        AgentThread? thread = null;
         try
         {
-            return await agent.InvokeAsync(thread).FirstAsync();
+            var result = await agent.InvokeAsync(message, thread).FirstAsync();
+            thread = result.Thread;
+            return result.Message;
         }
         finally
         {
-            await thread.DeleteAsync();
+            if (thread != null)
+            {
+                await thread.DeleteAsync();
+            }
         }
     }
 }
+
+public record InvokeAgentRequest(string AgentName, ChatMessageContent Message);
