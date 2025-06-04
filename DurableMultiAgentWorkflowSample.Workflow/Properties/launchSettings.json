@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DurableMultiAgentWorkflowSample.Workflow": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7053",
+      "launchBrowser": false
+    }
+  }
+}
