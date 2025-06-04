@@ -23,13 +23,10 @@ internal static class TaskOrchestrationContextExtensions
         string agentName,
         ChatHistory chatHistory)
     {
-        await context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory, agentName);
-        var result = await context.CallActivityAsync<ChatMessageContent>(
+        var (result, updatedChatHistory) = await context.CallActivityAsync<(ChatMessageContent, ChatHistory)>(
             nameof(InvokeAgentActivity),
-            new InvokeAgentRequest(agentName, chatHistory.Last()));
-        chatHistory.Add(result);
-        await context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory);
-        return new(result, chatHistory);
+            new InvokeAgentRequest(agentName, chatHistory.Last(), context.InstanceId, chatHistory));
+        return new(result, updatedChatHistory);
     }
 
     public static async Task<AgentResult> AskToHumanAsync(
