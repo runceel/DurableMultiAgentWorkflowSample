@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DurableMultiAgentWorkflowSample.WindowsClient\DurableMultiAgentWorkflowSample.WindowsClient.csproj" />
     <ProjectReference Include="..\DurableMultiAgentWorkflowSample.Workflow\DurableMultiAgentWorkflowSample.Workflow.csproj" />
   </ItemGroup>
 

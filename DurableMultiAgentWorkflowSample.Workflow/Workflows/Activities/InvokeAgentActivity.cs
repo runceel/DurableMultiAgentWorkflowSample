@@ -23,12 +23,12 @@ public class InvokeAgentActivity(IServiceProvider services)
     public async Task<ChatMessageContent> RunAsync(
         [ActivityTrigger] InvokeAgentRequest input)
     {
-        var (agentName, message) = input;
+        var (agentName, messages) = input;
         var agent = services.GetRequiredKeyedService<Agent>(agentName);
         AgentThread? thread = null;
         try
         {
-            var result = await agent.InvokeAsync(message, thread).FirstAsync();
+            var result = await agent.InvokeAsync(messages, thread).FirstAsync();
             thread = result.Thread;
             return result.Message;
         }
@@ -42,4 +42,4 @@ public class InvokeAgentActivity(IServiceProvider services)
     }
 }
 
-public record InvokeAgentRequest(string AgentName, ChatMessageContent Message);
+public record InvokeAgentRequest(string AgentName, ChatHistory Messages);

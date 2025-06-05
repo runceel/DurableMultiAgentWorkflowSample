@@ -10,7 +10,7 @@ public class NotifyToUserActivity
 {
     [Function(nameof(NotifyToUserActivity))]
     public async Task RunAsync(
-        [ActivityTrigger] (string userId, string message) input)
+        [ActivityTrigger] NotifyToUserRequest input)
     {
         var (userId, message) = input;
         // Here you would implement the logic to notify the user, e.g., send an email or a push notification.
@@ -19,3 +19,5 @@ public class NotifyToUserActivity
         Console.WriteLine($"Notification sent to user {userId}: {message}");
     }
 }
+
+public record NotifyToUserRequest(string UserId, string Message);

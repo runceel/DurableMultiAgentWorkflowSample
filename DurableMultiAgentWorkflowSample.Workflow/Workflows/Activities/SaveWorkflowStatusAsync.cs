@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Functions.Worker;
+﻿using DurableMultiAgentWorkflowSample.Common;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System;

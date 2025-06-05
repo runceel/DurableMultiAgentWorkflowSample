@@ -1,19 +1,14 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace DurableMultiAgentWorkflowSample.Workflow.Workflows;
+namespace DurableMultiAgentWorkflowSample.Common;
 /// <summary>
 /// Represents the status of a workflow.
 /// </summary>
 public record WorkflowStatus(
     string Id,
-    WorkflowStatusType Type,
+    WorkflowStatusType Status,
     string[] CurrentAgents,
     ChatMessageContent? FinalResult,
     ChatHistory? ChatHistory);

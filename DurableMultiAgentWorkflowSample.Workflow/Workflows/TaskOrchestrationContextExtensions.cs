@@ -1,4 +1,5 @@
-﻿using DurableMultiAgentWorkflowSample.Workflow.Workflows.Activities;
+﻿using DurableMultiAgentWorkflowSample.Common;
+using DurableMultiAgentWorkflowSample.Workflow.Workflows.Activities;
 using Microsoft.DurableTask;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -8,16 +9,13 @@ using System.Threading.Tasks;
 namespace DurableMultiAgentWorkflowSample.Workflow.Workflows;
 internal static class TaskOrchestrationContextExtensions
 {
-    public static async Task<AgentResult> InvokeAgentAsync(
-        this TaskOrchestrationContext context,
-        string agentName,
-        ChatMessageContent message,
-        ChatHistory chatHistory)
+    private static readonly TaskOptions s_defaultTaskOptions = new()
     {
-        chatHistory.Add(message);
-        return await context.InvokeAgentAsync(agentName, chatHistory);
-    }
-
+        Retry = new(new RetryPolicy(
+            3, 
+            TimeSpan.FromSeconds(1),
+            maxRetryInterval: TimeSpan.FromSeconds(10))),
+    };
     public static async Task<AgentResult> InvokeAgentAsync(
         this TaskOrchestrationContext context,
         string agentName,
@@ -26,7 +24,8 @@ internal static class TaskOrchestrationContextExtensions
         await context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory, agentName);
         var result = await context.CallActivityAsync<ChatMessageContent>(
             nameof(InvokeAgentActivity),
-            new InvokeAgentRequest(agentName, chatHistory.Last()));
+            new InvokeAgentRequest(agentName, chatHistory),
+            s_defaultTaskOptions);
         chatHistory.Add(result);
         await context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory);
         return new(result, chatHistory);
@@ -76,12 +75,12 @@ internal static class TaskOrchestrationContextExtensions
     public static async Task SaveWorkflowStatusAsync(
         this TaskOrchestrationContext context,
         WorkflowStatusType statusType,
-        ChatHistory chatHistory,
+        ChatHistory? chatHistory,
         ChatMessageContent? finalResult,
         params string[] currentAgents)
     {
         var status = new WorkflowStatus(context.InstanceId, statusType, currentAgents, finalResult, chatHistory);
-        await context.CallActivityAsync(nameof(SaveWorkflowStatusAsync), status);
+        await context.CallActivityAsync(nameof(SaveWorkflowStatusAsync), status, s_defaultTaskOptions);
     }
 }
 

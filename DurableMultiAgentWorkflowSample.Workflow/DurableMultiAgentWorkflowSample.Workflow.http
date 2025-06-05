@@ -1,11 +1,11 @@
-﻿@DurableMultiAgentWorkflowSample.Workflow_HostAddress = http://localhost:57398
-@Id = 154c69bc394a49f891149e8c8e8e04d3
+﻿@DurableMultiAgentWorkflowSample.Workflow_HostAddress = http://localhost:7071
+@Id = 7fba38185bde48248c0cf3e9e595652a
 
 POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Start
 Content-Type: application/json
 
 {
-  "Message": "ファンタジー短編小説の書き出し部分を書いてください。"
+  "Message": "JavaScript を書いたことがある人向けの C# 入門記事を書いてください"
 }
 
 ###
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
   "Id": "{{Id}}",
-  "Message": "主人公が森で剣を振っているようなところまで書いてください"
+  "Message": "express と ASP.NET Core Minimal API で Hello world を返すような簡単な Web API の例も足してください。C# だからといっていたずらにコード量が増えるわけではないという点をそれとなく訴求したいです。"
 }
 
 ###
