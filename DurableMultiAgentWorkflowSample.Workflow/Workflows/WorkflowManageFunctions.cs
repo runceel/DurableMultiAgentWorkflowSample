@@ -69,6 +69,4 @@ public class WorkflowManageFunctions(IDistributedCache cache)
     }
 }
 
-public record WorkflowInfo(string Id);
-public record StartRequest(string Message);
 public record ReplyRequest(string Id, string Message);

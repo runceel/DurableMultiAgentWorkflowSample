@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DurableMultiAgentWorkflowSample.ClientLibrary;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace DurableMultiAgentWorkflowSample.WindowsClient;
@@ -12,6 +13,11 @@ internal class Program
 
         builder.Services.AddSingleton<App>();
         builder.Services.AddSingleton<MainWindow>();
+
+        builder.Services.AddHttpClient<IAgentWorkflowClient, SignalRAgentWorkflowProgress>(client =>
+        {
+            client.BaseAddress = new("https+http://workflow");
+        });
 
         var appHost = builder.Build();
         var app = appHost.Services.GetRequiredService<App>();

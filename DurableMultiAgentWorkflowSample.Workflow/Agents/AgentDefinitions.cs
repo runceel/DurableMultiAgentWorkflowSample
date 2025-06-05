@@ -2,7 +2,6 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
-using OpenAI.Chat;
 using System.ComponentModel;
 
 namespace DurableMultiAgentWorkflowSample.Workflow.Agents;

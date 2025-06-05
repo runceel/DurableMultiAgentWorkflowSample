@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DurableMultiAgentWorkflowSample.WindowsClient.ViewModels;
 
 namespace DurableMultiAgentWorkflowSample.WindowsClient;
 /// <summary>
@@ -18,5 +19,11 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    public MainWindow(MainWindowViewModel mainWindowViewModel)
+    {
+        InitializeComponent();
+        DataContext = mainWindowViewModel;
     }
 }

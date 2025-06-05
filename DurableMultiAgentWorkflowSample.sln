@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableMultiAgentWorkflowSa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aspire", "Aspire", "{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableMultiAgentWorkflowSample.ClientLibrary", "DurableMultiAgentWorkflowSample.ClientLibrary\DurableMultiAgentWorkflowSample.ClientLibrary.csproj", "{92EE243A-9450-4644-BB61-ACF1E8BB8DCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{09ECD4EB-4C50-40BF-9A64-EA36C4BBACD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09ECD4EB-4C50-40BF-9A64-EA36C4BBACD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09ECD4EB-4C50-40BF-9A64-EA36C4BBACD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92EE243A-9450-4644-BB61-ACF1E8BB8DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92EE243A-9450-4644-BB61-ACF1E8BB8DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92EE243A-9450-4644-BB61-ACF1E8BB8DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92EE243A-9450-4644-BB61-ACF1E8BB8DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
-﻿@DurableMultiAgentWorkflowSample.Workflow_HostAddress = http://localhost:7071
+﻿@DurableMultiAgentWorkflowSampleWorkflow_HostAddress = http://localhost:7071
 @Id = 7fba38185bde48248c0cf3e9e595652a
 
-POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Start
+POST {{DurableMultiAgentWorkflowSampleWorkflow_HostAddress}}/api/Start
 Content-Type: application/json
 
 {
@@ -9,10 +9,10 @@ Content-Type: application/json
 }
 
 ###
-GET {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/GetWorkflowStatus?instanceId={{Id}}
+GET {{DurableMultiAgentWorkflowSampleWorkflow_HostAddress}}/api/GetWorkflowStatus?instanceId={{Id}}
 
 ###
-POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Reply
+POST {{DurableMultiAgentWorkflowSampleWorkflow_HostAddress}}/api/Reply
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{DurableMultiAgentWorkflowSample.Workflow_HostAddress}}/api/Reply
+POST {{DurableMultiAgentWorkflowSampleWorkflow_HostAddress}}/api/Reply
 Content-Type: application/json
 
 {
