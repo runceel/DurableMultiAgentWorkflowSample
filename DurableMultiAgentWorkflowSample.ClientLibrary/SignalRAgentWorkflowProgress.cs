@@ -1,10 +1,8 @@
 ﻿using System.Net.Http.Json;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using DurableMultiAgentWorkflowSample.Common;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.ServiceDiscovery;
 
 namespace DurableMultiAgentWorkflowSample.ClientLibrary;
 public class SignalRAgentWorkflowProgress(

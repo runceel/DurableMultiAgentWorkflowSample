@@ -2,13 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Windows.Data;
-using System.Windows.Documents;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DurableMultiAgentWorkflowSample.ClientLibrary;
 using DurableMultiAgentWorkflowSample.Common;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Trace;
 
 namespace DurableMultiAgentWorkflowSample.WindowsClient.ViewModels;
 public partial class MainWindowViewModel : ObservableObject

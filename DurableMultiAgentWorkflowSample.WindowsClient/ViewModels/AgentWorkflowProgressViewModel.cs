@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DurableMultiAgentWorkflowSample.Common;
+﻿using DurableMultiAgentWorkflowSample.Common;
 
 namespace DurableMultiAgentWorkflowSample.WindowsClient.ViewModels;
 public class AgentWorkflowProgressViewModel(AgentWorkflowProgress agentWorkflowProgress)

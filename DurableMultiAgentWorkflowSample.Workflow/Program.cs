@@ -1,14 +1,11 @@
-﻿using Azure.AI.OpenAI;
-using Azure.Identity;
+﻿using Azure.Identity;
 using DurableMultiAgentWorkflowSample.Common;
 using DurableMultiAgentWorkflowSample.Workflow.Agents;
 using DurableMultiAgentWorkflowSample.Workflow.Workflows.Activities;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 
 var builder = FunctionsApplication.CreateBuilder(args);

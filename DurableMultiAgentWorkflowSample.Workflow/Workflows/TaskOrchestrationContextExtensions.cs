@@ -5,7 +5,6 @@ using Microsoft.DurableTask;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DurableMultiAgentWorkflowSample.Workflow.Workflows;
 internal static class TaskOrchestrationContextExtensions
