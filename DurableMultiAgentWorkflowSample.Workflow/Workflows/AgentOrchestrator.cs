@@ -1,4 +1,4 @@
-using DurableMultiAgentWorkflowSample.Common;
+﻿using DurableMultiAgentWorkflowSample.Common;
 using DurableMultiAgentWorkflowSample.Workflow.Agents;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.DurableTask;
@@ -29,9 +29,9 @@ public static class AgentOrchestrator
         if (chatHistory.Count >= 100)
         {
             logger.LogError("Chat history exceeds the maximum allowed length of 100 messages.");
-            await context.SaveWorkflowStatusAsync(
+            await context.SaveAndNotifyAsync(
                 WorkflowStatusType.Failed, 
-                chatHistory,
+                chatHistory, 
                 new ChatMessageContent(AuthorRole.Assistant,
                 "Chat history exceeds the maximum allowed length of 100 messages. Please start a new conversation."));
             return;
@@ -48,9 +48,11 @@ public static class AgentOrchestrator
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred during the orchestration process.");
-            await context.SaveWorkflowStatusAsync(WorkflowStatusType.Failed, chatHistory,
+            await context.SaveAndNotifyAsync(
+                WorkflowStatusType.Failed, 
+                chatHistory, 
                 new ChatMessageContent(AuthorRole.Assistant,
-                "An unexpected error occurred. Please create a new conversation. If the issue persists, contact support."));
+                "An unexpected error occurred during the orchestration process. Please try again later."));
         }
     }
 
@@ -92,7 +94,10 @@ public static class AgentOrchestrator
 
             if (reviewerResponse.Content?.Equals("Approve", StringComparison.OrdinalIgnoreCase) ?? false)
             {
-                await context.SaveWorkflowStatusAsync(WorkflowStatusType.Completed, chatHistory, writerResponse);
+                await context.SaveAndNotifyAsync(
+                    WorkflowStatusType.Completed, 
+                    chatHistory, 
+                    writerResponse);
                 return (WorkflowStatusType.Completed, chatHistory);
             }
         }

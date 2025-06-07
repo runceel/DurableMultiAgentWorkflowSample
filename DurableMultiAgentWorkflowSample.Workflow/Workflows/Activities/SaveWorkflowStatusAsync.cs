@@ -16,7 +16,7 @@ public class SaveWorkflowStatusAsync(IDistributedCache cache)
         [ActivityTrigger] WorkflowStatus status)
     {
         await cache.SetAsync(status.Id, 
-            System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(status), 
+            System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(status, DefaultJsonSerializerOptions.Value), 
             new DistributedCacheEntryOptions
             {
                 SlidingExpiration = TimeSpan.FromHours(1) // Set expiration as needed

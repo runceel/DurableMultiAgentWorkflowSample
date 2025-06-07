@@ -1,6 +1,8 @@
-using Azure.AI.OpenAI;
+﻿using Azure.AI.OpenAI;
 using Azure.Identity;
+using DurableMultiAgentWorkflowSample.Common;
 using DurableMultiAgentWorkflowSample.Workflow.Agents;
+using DurableMultiAgentWorkflowSample.Workflow.Workflows.Activities;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,12 @@ using Microsoft.SemanticKernel;
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.Services.AddServerlessHub<NotifyToUserActivity>();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = DefaultJsonSerializerOptions.Value.PropertyNamingPolicy;
+    options.SerializerOptions.Encoder = DefaultJsonSerializerOptions.Value.Encoder;
+});
 builder.Services.AddAzureOpenAIChatCompletion(
     builder.Configuration["AOAI:ModelDeploymentName"]!,
     builder.Configuration["AOAI:Endpoint"]!,

@@ -18,8 +18,8 @@ public class WorkflowManageFunctions(IDistributedCache cache)
         [HttpTrigger("post")] HttpRequestData request,
         [DurableClient] DurableTaskClient client)
     {
-        var initialMessage = await JsonSerializer.DeserializeAsync<StartRequest>(request.Body);
-        if (initialMessage == null || string.IsNullOrEmpty(initialMessage.Message))
+        var startRequest = await JsonSerializer.DeserializeAsync<StartRequest>(request.Body, DefaultJsonSerializerOptions.Value);
+        if (startRequest == null || string.IsNullOrEmpty(startRequest.Message))
         {
             var batRequestResponse = request.CreateResponse(HttpStatusCode.BadRequest);
             await batRequestResponse.WriteStringAsync("Initial message is required.");
@@ -27,10 +27,12 @@ public class WorkflowManageFunctions(IDistributedCache cache)
         }
 
         var instanceId = await client.ScheduleNewOrchestrationInstanceAsync(nameof(AgentOrchestrator),
-            new ChatHistory { new(AuthorRole.User, initialMessage.Message) });
+            new ChatHistory { new(AuthorRole.User, startRequest.Message) },
+            options: new(startRequest.Id));
         var response = request.CreateResponse(HttpStatusCode.Accepted);
         response.Headers.Add("Content-Type", "application/json");
-        await JsonSerializer.SerializeAsync(response.Body, new WorkflowInfo(instanceId));
+        await JsonSerializer.SerializeAsync(response.Body, new WorkflowInfo(instanceId), DefaultJsonSerializerOptions.Value);
+        
         return response;
     }
 
@@ -50,7 +52,7 @@ public class WorkflowManageFunctions(IDistributedCache cache)
         {
             return new NotFoundObjectResult($"Workflow with ID {instanceId} not found.");
         }
-        return new OkObjectResult(JsonSerializer.Deserialize<WorkflowStatus>(status));
+        return new OkObjectResult(JsonSerializer.Deserialize<WorkflowStatus>(status, DefaultJsonSerializerOptions.Value));
     }
 
     [Function(nameof(Reply))]
@@ -58,7 +60,7 @@ public class WorkflowManageFunctions(IDistributedCache cache)
         [HttpTrigger("post")] HttpRequest request,
         [DurableClient] DurableTaskClient client)
     {
-        var requestBody = await request.ReadFromJsonAsync<ReplyRequest>();
+        var requestBody = await request.ReadFromJsonAsync<ReplyRequest>(DefaultJsonSerializerOptions.Value);
         if (requestBody == null)
         {
             return new BadRequestObjectResult("Reply message is required.");
@@ -68,5 +70,3 @@ public class WorkflowManageFunctions(IDistributedCache cache)
         return new OkResult();
     }
 }
-
-public record ReplyRequest(string Id, string Message);

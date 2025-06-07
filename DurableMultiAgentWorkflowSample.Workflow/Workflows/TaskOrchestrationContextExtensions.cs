@@ -1,4 +1,5 @@
-﻿using DurableMultiAgentWorkflowSample.Common;
+﻿#pragma warning disable SKEXP0001
+using DurableMultiAgentWorkflowSample.Common;
 using DurableMultiAgentWorkflowSample.Workflow.Workflows.Activities;
 using Microsoft.DurableTask;
 using Microsoft.SemanticKernel;
@@ -21,13 +22,17 @@ internal static class TaskOrchestrationContextExtensions
         string agentName,
         ChatHistory chatHistory)
     {
-        await context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory, agentName);
+        await Task.WhenAll(
+            context.SaveWorkflowStatusAsync(WorkflowStatusType.InvokingAgent, chatHistory, agentName),
+            context.NotifyToUserAsync(new(WorkflowStatusType.InvokingAgent, [agentName])));
         var result = await context.CallActivityAsync<ChatMessageContent>(
             nameof(InvokeAgentActivity),
             new InvokeAgentRequest(agentName, chatHistory),
             s_defaultTaskOptions);
         chatHistory.Add(result);
-        await context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory);
+        await Task.WhenAll(
+            context.SaveWorkflowStatusAsync(WorkflowStatusType.Orchestrating, chatHistory),
+            context.NotifyToUserAsync(new(WorkflowStatusType.Orchestrating, [], result.ToAgentMessage())));
         return new(result, chatHistory);
     }
 
@@ -39,8 +44,7 @@ internal static class TaskOrchestrationContextExtensions
     {
         timeout = timeout ?? TimeSpan.FromDays(3);
         chatHistory.Add(message);
-        await context.SaveWorkflowStatusAsync(WorkflowStatusType.WaitingForInput, chatHistory);
-        await context.NotifyToUserAsync(message);
+        await context.SaveAndNotifyAsync(WorkflowStatusType.WaitingForInput, chatHistory, message);
         var result = await context.WaitForExternalEvent<string>(
             OrchestratorEventNames.Reply,
             timeout.Value);
@@ -52,10 +56,29 @@ internal static class TaskOrchestrationContextExtensions
 
     public static async Task NotifyToUserAsync(
         this TaskOrchestrationContext context,
-        ChatMessageContent message)
+        AgentWorkflowProgress progress)
     {
-        // TODO: Implement the logic to notify the user, e.g., send an email or a push notification.
-        Console.WriteLine($"Notify: {message.Content}");
+        await context.CallActivityAsync(
+            nameof(NotifyToUserActivity), 
+            new NotifyToUserRequest(context.InstanceId, progress), 
+            s_defaultTaskOptions);
+    }
+
+    public static async Task SaveAndNotifyAsync(
+        this TaskOrchestrationContext context,
+        WorkflowStatusType statusType,
+        ChatHistory chatHistory,
+        ChatMessageContent? message = null,
+        params string[] currentAgents)
+    {
+        var finalMessage = statusType == WorkflowStatusType.Completed || statusType == WorkflowStatusType.Failed ? message : null; 
+        await Task.WhenAll(
+            context.SaveWorkflowStatusAsync(
+                statusType, 
+                chatHistory, 
+                finalMessage, 
+                currentAgents),
+            context.NotifyToUserAsync(new(statusType, currentAgents, message?.ToAgentMessage())));
     }
 
     public static async Task SaveWorkflowStatusAsync(

@@ -5,4 +5,4 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DurableMultiAgentWorkflowSample.Common;
-public record StartRequest(string Id, string Message);
+public record ReplyRequest(string Id, string Message);
