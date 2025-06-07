@@ -30,13 +30,17 @@
 
 AppHost プロジェクトは .NET Aspire プロジェクトです。パラメーターの設定は `appsettings.json` などの設定ファイルで行います。
 
-`appsettings.json` の例:{
+`appsettings.json` の例:
+```json
+{
   "Parameters": {
     "aoai-endpoint": "<your-aoai-endpoint>",
     "aoai-modeldeploymentname": "<your-model-deployment-name>",
     "signalr-connectionstring": "<your-signalr-connection-string>"
   }
 }
+```
+
 パラメーターの説明:
 - `aoai-endpoint`: Azure OpenAI Service のエンドポイント
 - `aoai-modeldeploymentname`: Azure OpenAI にデプロイしたモデルのデプロイ名
@@ -49,9 +53,8 @@ AppHost プロジェクトは .NET Aspire プロジェクトです。パラメーターの設定は `appse
    - コマンドラインから `dotnet run --project DurableMultiAgentWorkflowSample.AppHost` を実行
 
 2. **Windows クライアントの起動**:
-   - AppHost の起動完了後、自動的に Windows クライアントが起動します
-   - または手動で DurableMultiAgentWorkflowSample.WindowsClient プロジェクトを実行します
+   - AppHost の起動完了後、Aspire ダッシュボードから windows-client を実行します。
 
 3. **ワークフローの実行**:
-   - Windows クライアントでテキストを入力し「Start Workflow」ボタンをクリックすると、AIエージェントによるレビュープロセスが開始されます
-   - 進捗状況はリアルタイムで表示され、必要に応じてユーザー入力を求められます
+   - Windows クライアントでテキストを入力し「Send」ボタンをクリックすると、AIエージェントによる記事の作成とレビュープロセスが開始されます
+   - 進捗状況はリアルタイムで表示され、必要に応じてユーザー入力を求められます。
