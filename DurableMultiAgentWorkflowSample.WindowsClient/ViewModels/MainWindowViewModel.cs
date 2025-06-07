@@ -15,18 +15,16 @@ public partial class MainWindowViewModel : ObservableObject
 {
     private readonly IAgentWorkflowClient _agentWorkflowClient;
     private readonly ILogger<MainWindowViewModel> _logger;
+
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(StartWorkflowCommand))]
-    [NotifyCanExecuteChangedFor(nameof(ReplyCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SendCommand))]
     private string _message = "";
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ReplyCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CancelCommand))]
     private string? _id;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(StartWorkflowCommand))]
-    [NotifyCanExecuteChangedFor(nameof(ReplyCommand))]
     private bool _isRunning = false;
 
     public MainWindowViewModel(IAgentWorkflowClient agentWorkflowClient, ILogger<MainWindowViewModel> logger)
@@ -39,12 +37,42 @@ public partial class MainWindowViewModel : ObservableObject
     // ListBoxにバインドするコレクション
     public ObservableCollection<AgentWorkflowProgressViewModel> Items { get; } = new();
 
-    public bool CanExecuteStartWorkflow() => !IsRunning && !string.IsNullOrWhiteSpace(Message);
-
-    [RelayCommand(CanExecute = nameof(CanExecuteStartWorkflow), IncludeCancelCommand = true)]
-    public async Task StartWorkflowAsync(CancellationToken cancellationToken)
+    [RelayCommand(CanExecute = nameof(CanExecuteSend))]
+    public async Task SendAsync()
     {
         IsRunning = true;
+        try
+        {
+            if (Id == null)
+            {
+                await StartWorkflowAsync();
+            }
+            else
+            {
+                await ReplyAsync();
+            }
+
+            Message = "";
+        }
+        finally
+        {
+            IsRunning = false;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanExecuteCancel))]
+    public void Cancel()
+    {
+        Id = null;
+    }
+
+    private bool CanExecuteCancel() => Id != null;
+
+
+    private bool CanExecuteSend() => !IsRunning && !string.IsNullOrWhiteSpace(Message);
+
+    private async Task StartWorkflowAsync()
+    {
         try
         {
             Items.Clear();
@@ -63,8 +91,7 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    [RelayCommand(CanExecute = nameof(CanExecuteReply))]
-    public async Task ReplyAsync()
+    private async Task ReplyAsync()
     {
         if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(Message))
         {
@@ -75,7 +102,6 @@ public partial class MainWindowViewModel : ObservableObject
         await _agentWorkflowClient.ReplyAsync(new(Id, Message));
     }
 
-    public bool CanExecuteReply() => !string.IsNullOrEmpty(Id) && !string.IsNullOrEmpty(Message);
 
     private void UpdateProgress(AgentWorkflowProgress progress)
     {

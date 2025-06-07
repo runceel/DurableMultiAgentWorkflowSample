@@ -8,7 +8,7 @@
     xmlns:vm="clr-namespace:DurableMultiAgentWorkflowSample.WindowsClient.ViewModels"
     Title="Durable Multi-Agent Workflow"
     Width="850"
-    Height="500"
+    Height="800"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     Background="#f7f9fb"
     mc:Ignorable="d">
@@ -63,15 +63,15 @@
                         MinWidth="75"
                         Margin="5"
                         Padding="5"
-                        Command="{Binding StartWorkflowCommand}"
-                        Content="送信" />
+                        Command="{Binding SendCommand}"
+                        Content="Send" />
                     <Button
                         Grid.Column="2"
                         MinWidth="75"
                         Margin="5"
                         Padding="5"
-                        Command="{Binding ReplyCommand}"
-                        Content="入力送信" />
+                        Command="{Binding CancelCommand}"
+                        Content="Cancel" />
                 </Grid>
             </StackPanel>
         </Border>
